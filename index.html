@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#102a56">
+<title>EduNova</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f1f5fb;
+ color:#182943;
+}
+header{
+ background:#102a56;
+ color:white;
+ padding:22px;
+ text-align:center;
+}
+header h1{margin:0;font-size:30px}
+header p{margin:6px 0 0;color:#dce8fa}
+.container{
+ max-width:850px;
+ margin:25px auto;
+ padding:18px;
+}
+.card{
+ background:white;
+ padding:22px;
+ border-radius:16px;
+ box-shadow:0 5px 20px #102a5615;
+ margin-bottom:18px;
+}
+h2,h3{color:#102a56}
+label{display:block;margin:12px 0 6px;font-weight:bold}
+select,input,textarea{
+ width:100%;
+ padding:12px;
+ border:1px solid #ccd7e7;
+ border-radius:9px;
+ font-size:15px;
+}
+button{
+ background:#102a56;
+ color:white;
+ border:0;
+ border-radius:9px;
+ padding:12px 16px;
+ cursor:pointer;
+ font-weight:bold;
+}
+button:hover{background:#244b82}
+.menu{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
+}
+.menu button{
+ min-height:75px;
+ font-size:15px;
+}
+.secondary{background:#e8eff9;color:#102a56}
+.hidden{display:none}
+.notice{
+ background:#edf3fb;
+ border-left:4px solid #2f65b5;
+ padding:13px;
+ border-radius:8px;
+ margin:10px 0;
+}
+.small{font-size:12px;color:#68778c;line-height:1.5}
+@media(max-width:500px){
+ .menu{grid-template-columns:1fr}
+ .container{padding:12px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <h1>EduNova</h1>
+ <p>Tu educación, más cerca de ti</p>
+ <p>Instituto Público Jonathan González Morales</p>
+</header>
+
+<main class="container">
+
+<section class="card" id="inicio">
+ <h2>Bienvenido a EduNova</h2>
+ <p>Selecciona tu modalidad y sección para ingresar.</p>
+
+ <label>Modalidad</label>
+ <select id="modalidad">
+  <option value="">Seleccionar modalidad</option>
+  <option>Matutino</option>
+  <option>Vespertino</option>
+  <option>Por encuentro / Sábado</option>
+ </select>
+
+ <label>Sección</label>
+ <select id="seccion">
+  <option value="">Seleccionar sección</option>
+  <option>A</option>
+  <option>B</option>
+ </select>
+
+ <br><br>
+ <button onclick="entrar()">Entrar a EduNova</button>
+</section>
+
+<section id="principal" class="hidden">
+
+ <div class="card">
+  <h2>Panel estudiantil</h2>
+  <p id="grupo"></p>
+  <button class="secondary" onclick="cambiarGrupo()">Cambiar grupo</button>
+ </div>
+
+ <div class="card">
+  <div class="menu">
+   <button onclick="mostrar('horarios')">📅 Horarios</button>
+   <button onclick="mostrar('pruebas')">📝 Pruebas / Exámenes</button>
+   <button onclick="mostrar('graduacion')">🎓 Graduación</button>
+   <button onclick="mostrar('avisos')">📢 Avisos escolares</button>
+   <button onclick="mostrar('buzon')">✉ Buzón estudiantil</button>
+   <button onclick="mostrar('admin')">⚙ Administración</button>
+  </div>
+ </div>
+
+ <div class="card" id="contenido">
+  <h3>Bienvenido</h3>
+  <p>Selecciona una de las opciones para comenzar.</p>
+ </div>
+
+</section>
+
+<p class="small">
+EduNova es un prototipo de idea emprendedora.
+La información oficial debe ser autorizada por el instituto.
+</p>
+
+</main>
+
+<script>
+let modalidadActual="";
+let seccionActual="";
+
+function entrar(){
+ modalidadActual=document.getElementById("modalidad").value;
+ seccionActual=document.getElementById("seccion").value;
+
+ if(!modalidadActual || !seccionActual){
+  alert("Selecciona tu modalidad y sección.");
+  return;
+ }
+
+ document.getElementById("inicio").classList.add("hidden");
+ document.getElementById("principal").classList.remove("hidden");
+ document.getElementById("grupo").innerText=
+ modalidadActual+" - Sección "+seccionActual;
+}
+
+function cambiarGrupo(){
+ document.getElementById("principal").classList.add("hidden");
+ document.getElementById("inicio").classList.remove("hidden");
+}
+
+function mostrar(pagina){
+ let c=document.getElementById("contenido");
+ let sabado=modalidadActual==="Por encuentro / Sábado";
+ let evaluacion=sabado?"Exámenes":"Pruebas";
+
+ if(pagina==="horarios"){
+  let horario="";
+  if(modalidadActual==="Matutino")
+   horario="Lunes a viernes, de 7:00 a. m. a 12:00 p. m.";
+  else if(modalidadActual==="Vespertino")
+   horario="Lunes a viernes, de 12:30 p. m. a 5:30 p. m.";
+  else
+   horario="Sábados, de 7:00 a. m. a 3:00 p. m.";
+
+  c.innerHTML="<h3>Horarios</h3><div class='notice'>"+
+   modalidadActual+" - Sección "+seccionActual+
+   "<br>"+horario+"</div><p class='small'>Las materias y horas específicas se agregarán cuando el instituto facilite los horarios oficiales.</p>";
+ }
+
+ if(pagina==="pruebas"){
+  c.innerHTML="<h3>"+evaluacion+"</h3><p>Consulta aquí las fechas y avisos de tus evaluaciones.</p><div class='notice'>Todavía no hay evaluaciones publicadas.</div>";
+ }
+
+ if(pagina==="graduacion"){
+  c.innerHTML="<h3>Graduación</h3><p>Información sobre actividades, preparativos y comunicados de graduación.</p><div class='notice'>Todavía no hay comunicados publicados.</div>";
+ }
+
+ if(pagina==="avisos"){
+  c.innerHTML="<h3>Avisos escolares</h3><p>Comunicados importantes para tu modalidad y sección.</p><div class='notice'>No hay avisos publicados.</div>";
+ }
+
+ if(pagina==="buzon"){
+  c.innerHTML="<h3>Buzón estudiantil</h3><p>Escribe una pregunta o sugerencia.</p><textarea id='mensaje' rows='4' placeholder='Escribe tu mensaje...'></textarea><br><br><button onclick='enviarMensaje()'>Enviar mensaje de prueba</button><p id='respuesta'></p>";
+ }
+
+ if(pagina==="admin"){
+  c.innerHTML="<h3>Administración</h3><p>Panel demostrativo para preparar comunicados.</p><label>Título</label><input id='titulo' placeholder='Título del aviso'><label>Contenido</label><textarea id='texto' rows='4' placeholder='Escribe el comunicado'></textarea><br><br><button onclick='publicar()'>Mostrar publicación de prueba</button><div id='publicacion'></div><p class='small'>Esta demostración no envía información a otros teléfonos.</p>";
+ }
+}
+
+function enviarMensaje(){
+ let m=document.getElementById("mensaje").value.trim();
+ document.getElementById("respuesta").innerText=
+ m?"Mensaje registrado en esta demostración.":"Escribe un mensaje primero.";
+}
+
+function publicar(){
+ let t=document.getElementById("titulo").value;
+ let x=document.getElementById("texto").value;
+ if(!t.trim()||!x.trim()){
+  alert("Completa el título y el contenido.");
+  return;
+ }
+ document.getElementById("publicacion").innerHTML=
+ "<div class='notice'><strong>"+t.replace(/[&<>"]/g,"")+
+ "</strong><p>"+x.replace(/[&<>"]/g,"")+"</p></div>";
+}
+</script>
+
+</body>
+</html>
